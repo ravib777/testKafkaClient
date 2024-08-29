@@ -16,7 +16,7 @@ This command compiles the project and creates a fat JAR in the `target` director
 The utility accepts various parameters based on the operation you want to perform. The general usage pattern is:
 
 ```shell
-java -jar target/testKafkaClient-1.0-SNAPSHOT-jar-with-dependencies.jar--operation <operation> [other options]
+java -jar target/testKafkaClient-1.0-SNAPSHOT-jar-with-dependencies.jar --operation <operation> [other options]
 ```
 
 ### Parameters
@@ -38,7 +38,7 @@ java -jar target/testKafkaClient-1.0-SNAPSHOT-jar-with-dependencies.jar --operat
 #### Consuming Messages
 To consume messages from a topic:
 ```shell
-java -jar target/testKafkaClient-1.0-SNAPSHOT-jar-with-dependencies.jar--operation consume --bootstrapServer localhost:9092 --topicName myTopic --group myGroup --numMessages 10
+java -jar target/testKafkaClient-1.0-SNAPSHOT-jar-with-dependencies.jar --operation consume --bootstrapServer localhost:9092 --topicName myTopic --group myGroup --numMessages 10
 ```
 
 #### Describing a Topic
