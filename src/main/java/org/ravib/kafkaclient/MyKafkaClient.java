@@ -86,7 +86,7 @@ public class MyKafkaClient {
         }
 
         if (!bootStrapPreset) {
-            System.out.println("--bootstrap-server <broker:port> was not set, default localhost:9092 is being used");
+            System.out.println("--bootstrapServer <broker:port> was not set, default localhost:9092 is being used");
         }
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServer);
         properties.put(ProducerConfig.CLIENT_DNS_LOOKUP_CONFIG, "use_all_dns_ips");
