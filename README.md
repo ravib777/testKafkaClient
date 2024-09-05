@@ -20,12 +20,14 @@ java -jar target/testKafkaClient-1.0-SNAPSHOT-jar-with-dependencies.jar --operat
 ```
 
 ### Parameters
-- `--operation`: The operation to perform. Accepts `produce`, `consume`, `describeTopic`, and `describeGroup`.
+- `--operation`: The operation to perform. Accepts `produce`, `consume`, `describeTopic`, and `describeGroup` and `describeCluster`.
 - `--bootstrapServer`: The Kafka bootstrap server(s) to connect to. Format: `host1:port,host2:port`.
 - `--topicName`: The name of the Kafka topic to interact with.
 - `--numMessages`: he number of messages to produce or consume. Default is `1`.
 - `--group`: (Only for `consume` and `describeGroup`) The consumer group ID.
 - `--configFile`: Path of the config file including kafka client's security and other configs.
+- `--sendKeys` : Use this with `operation produce` to send Keys. Default is `false`
+
 
 ### Examples
 
@@ -33,6 +35,12 @@ java -jar target/testKafkaClient-1.0-SNAPSHOT-jar-with-dependencies.jar --operat
 To produce messages to a topic:
 ```shell
 java -jar target/testKafkaClient-1.0-SNAPSHOT-jar-with-dependencies.jar --operation produce --bootstrapServer localhost:9092 --topicName myTopic --numMessages 5
+```
+
+#### Producing Messages with Keys
+To produce messages to a topic:
+```shell
+java -jar target/testKafkaClient-1.0-SNAPSHOT-jar-with-dependencies.jar --operation produce --bootstrapServer localhost:9092 --topicName myTopic --sendKeys true --numMessages 5
 ```
 
 #### Consuming Messages
@@ -53,6 +61,12 @@ To describe a Kafka consumer group:
 java -jar target/kafka-client-utility.jar --operation describeGroup --bootstrapServer localhost:9092 --group myGroup
 ```
 
+#### Describing cluster
+To describe a Kafka cluster:
+```shell
+java -jar target/kafka-client-utility.jar --operation describeCluster --bootstrapServer localhost:9092 
+```
+
 #### Using with Confluent Cloud
 To descibe topic in Confluent Cloud:
 
@@ -70,3 +84,18 @@ Run the command passing `--configFile client.properties`
 ```shell
 java -jar target/testKafkaClient-1.0-SNAPSHOT-jar-with-dependencies.jar --operation describeTopic --bootstrapServer pkc-xxx.xx.gcp.confluent.cloud:9092 --topicName myTopic --configFile client.properties
 ```
+
+#### Enable DEBUG kafka clients logging
+To enable DEBUG logging for kafka clients:
+- Set rootLogger to DEBUG:
+  ```shell
+  log4j.rootLogger=DEBUG, stderr
+  ```
+- For specific class/package TRACE logging, add:
+  ```shell
+  log4j.logger.org.apache.kafka.clients.producer.internals.ProducerBatch=TRACE
+  ```
+- Run the jar with `-Dlog4j.configuration=file:`
+  ```shell
+  java -Dlog4j.configuration=file:src/main/resources/log4j.properties -jar target/testKafkaClient-1.0-SNAPSHOT-jar-with-dependencies.jar --operation <operation>
+  ```
