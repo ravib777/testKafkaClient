@@ -20,7 +20,7 @@ java -jar target/testKafkaClient-1.0-SNAPSHOT-jar-with-dependencies.jar --operat
 ```
 
 ### Parameters
-- `--operation`: The operation to perform. Accepts `produce`, `consume`, `describe-topic`, and `describe-group` and `describe-cluster`.
+- `--operation`: The operation to perform. Accepts `produce`, `consume`, `describe-topic`, `describe-group`, `describe-cluster`, `list-topics` and `list-consumers`.
 - `--bootstrap-server`: The Kafka bootstrap server(s) to connect to. Format: `host1:port,host2:port`.
 - `--topic`: The name of the Kafka topic to interact with.
 - `--num-messages`: he number of messages to produce or consume. Default is `1`.
@@ -137,6 +137,18 @@ java -jar target/testKafkaClient-1.0-SNAPSHOT-jar-with-dependencies.jar --operat
 To describe a Kafka topic:
 ```shell
 java -jar target/testKafkaClient-1.0-SNAPSHOT-jar-with-dependencies.jar --operation describe-topic --bootstrap-server localhost:9092 --topic myTopic
+```
+
+#### Listing all Topics
+To describe a Kafka topic:
+```shell
+java -jar target/testKafkaClient-1.0-SNAPSHOT-jar-with-dependencies.jar --operation list-topics --bootstrap-server localhost:9092
+```
+
+#### Listing all Consumer Groups
+To describe a Kafka topic:
+```shell
+java -jar target/testKafkaClient-1.0-SNAPSHOT-jar-with-dependencies.jar --operation list-consumers --bootstrap-server localhost:9092 
 ```
 
 #### Describing a Consumer Group
