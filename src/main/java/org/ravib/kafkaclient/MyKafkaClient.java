@@ -199,8 +199,14 @@ public class MyKafkaClient {
             case "describe-cluster":
                 describeCluster(properties);
                 break;
+            case "list-topics":
+                listTopics(properties);
+                break;
+            case "list-consumers":
+                listConsumers(properties);
+                break;
             default:
-                System.out.println("Unsupported operation. Use produce, consume, describe-topic, describe-cluster or describe-group .");
+                System.out.println("Unsupported operation. Use produce, consume, describe-topic, describe-cluster, describe-group, list-topics or list-consumers.");
                 System.exit(1);
         }
     }
@@ -740,6 +746,39 @@ public class MyKafkaClient {
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+
+    private static void listTopics(Properties properties) {
+        try (AdminClient adminClient = AdminClient.create(properties)) {
+            System.out.println("Listing Kafka topics:");
+            ListTopicsResult listTopicsResult = adminClient.listTopics(new ListTopicsOptions());
+            List<String> topics = new ArrayList<>(listTopicsResult.names().get());
+            Collections.sort(topics, String.CASE_INSENSITIVE_ORDER);
+            for (String topic : topics) {
+                System.out.println(topic);
+            }
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void listConsumers(Properties properties) {
+        try (AdminClient admin = AdminClient.create(properties)) {
+            ListConsumerGroupsResult groupsResult = admin.listConsumerGroups();
+
+            List<String> consumerNames = new ArrayList<>();
+            for (ConsumerGroupListing groupListing : groupsResult.all().get()) {
+                consumerNames.add(groupListing.groupId());
+            }
+            Collections.sort(consumerNames, String.CASE_INSENSITIVE_ORDER);
+            for (String name : consumerNames) {
+                System.out.println(name);
+            }
+
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
         }
     }
 }
