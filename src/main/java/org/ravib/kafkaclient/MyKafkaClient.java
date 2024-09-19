@@ -136,6 +136,11 @@ public class MyKafkaClient {
             System.exit(0);
         }
 
+        if(operation==null){
+            System.out.println("--operation option must be provided. Use produce, consume, describe-topic, describe-cluster, describe-group, list-topics or list-consumers.");
+            System.exit(0);
+        }
+
 
         switch (operation) {
             case "produce":
@@ -738,10 +743,10 @@ public class MyKafkaClient {
                 Collection<Node> nodeList = nodesFuture.get();
                 System.out.println("Cluster ID: " + result.clusterId().get());
                 System.out.println("Nodes in the cluster:");
-                System.out.println("Broker ID \t Advertised Listeners \t Is Controller");
+                System.out.println("Broker ID \t Advertised Listeners \t Is Controller \t Rack");
                 for (Node node : nodeList) {
                     boolean isController = node.id() == controller.id();
-                    System.out.println(node.id() + " \t\t " + node.host() + ":" + node.port() + " \t\t " + isController);
+                    System.out.println(node.id() + " \t\t " + node.host() + ":" + node.port() + " \t\t " + isController + " \t\t " + node.rack());
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
