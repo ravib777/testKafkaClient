@@ -29,6 +29,7 @@ import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.KafkaFuture;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.TopicPartitionInfo;
+import org.apache.kafka.common.config.ConfigResource;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.common.Node;
@@ -673,6 +674,15 @@ public class MyKafkaClient {
             DescribeTopicsResult result = adminClient.describeTopics(topicList);
             TopicDescription topicDescription = result.values().get(topic).get();
             System.out.println("\n\nTopic: " + topic);
+            ConfigResource topicResource = new ConfigResource(ConfigResource.Type.TOPIC, topic);
+            DescribeConfigsResult describeConfigsResult = adminClient.describeConfigs(Collections.singletonList(topicResource));
+            describeConfigsResult.all().get().forEach((configResource, config_) -> {
+                System.out.print("Topic Configs: ");
+                config_.entries().forEach(configEntry -> {
+                    System.out.print(configEntry.name() + " = " + configEntry.value()+ " , ");
+                });
+            });
+
             System.out.println("-------------------------------------------------------------------------");
             System.out.printf("%-12s %-15s %-30s %-30s%n", "Partition", "Leader", "Replicas", "ISR");
             System.out.println("-------------------------------------------------------------------------");
@@ -734,6 +744,20 @@ public class MyKafkaClient {
 
     private static void describeCluster(Properties properties) {
         try (AdminClient adminClient = AdminClient.create(properties)) {
+            String firstBrokerId = adminClient.describeCluster(new DescribeClusterOptions()).nodes().get().stream()
+                    .findFirst()
+                    .map(node -> String.valueOf(node.id()))
+                    .orElseThrow(() -> new RuntimeException("No brokers found in the cluster"));
+
+
+            ConfigResource brokerResource = new ConfigResource(ConfigResource.Type.BROKER, firstBrokerId);
+            DescribeConfigsResult describeConfigsResult = adminClient.describeConfigs(Collections.singletonList(brokerResource));
+
+            describeConfigsResult.all().get().forEach((configResource, config) -> {
+                System.out.println("Broker Configs for one of the brokers in the cluster (brokerId#" + configResource.name()+") :");
+                config.entries().forEach(configEntry ->
+                        System.out.print(configEntry.name() + " = " + configEntry.value() + ","));
+            });
             DescribeClusterResult result = adminClient.describeCluster();
             KafkaFuture<Node> controllerFuture = result.controller();
             KafkaFuture<Collection<Node>> nodesFuture = result.nodes();
@@ -751,6 +775,10 @@ public class MyKafkaClient {
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
