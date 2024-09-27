@@ -192,7 +192,7 @@ To enable DEBUG logging for kafka clients:
   ```shell
   log4j.rootLogger=DEBUG, stderr
   ```
-- For specific class/package TRACE logging, add:
+- For specific class/package TRACE logging, add (Example):
   ```shell
   log4j.logger.org.apache.kafka.clients.producer.internals.ProducerBatch=TRACE
   ```
