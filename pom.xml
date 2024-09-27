@@ -90,6 +90,17 @@
         </dependency>
     </dependencies>
 
+    <repositories>
+        <repository>
+            <id>confluent-packages</id>
+            <name>Confluent</name>
+            <url>https://packages.confluent.io/maven/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
     <build>
         <resources>
             <resource>
